@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "CoinGecko cache in redis"
 authors = ["Tomas Toth <tomas.toth004@gmail.com>"]
 license = "MIT"
+packages = [{include = "coingecko_redis"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -12,6 +13,7 @@ black = "^22.8.0"
 pytest = "^7.1.3"
 redis = "^4.3.4"
 pycoingecko = "^3.0.0"
+pylint = "^2.15.3"
 
 [tool.poetry.dev-dependencies]
 
