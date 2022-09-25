@@ -1,5 +1,8 @@
 import asyncio
 import logging
+import sys
+
+print(sys.path)
 
 from coingecko_redis.coingecko import CoingeckoClient
 from coingecko_redis.redis_client import RedisClient
@@ -9,13 +12,11 @@ async def run():
     """
     App entry point
     """
+    logging.basicConfig(level=logging.INFO)
     logging.info("Starting the application")
     redis = RedisClient()
-    coin_gecko = CoingeckoClient()
-    await redis.update_price("BTC", await coin_gecko.get_price("bitcoin"))
-    logging.info(await redis.get_price("BTC"))
-    logging.info("done")
-
+    coin_gecko = CoingeckoClient(price_cache=redis)
+    await coin_gecko.price_update_loop()
 
 if __name__ == "__main__":
     asyncio.run(run())

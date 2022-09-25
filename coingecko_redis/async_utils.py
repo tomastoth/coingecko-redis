@@ -1,8 +1,9 @@
 import asyncio
 from functools import partial, wraps
+from typing import Any
 
 
-def wrap_async(func):
+def wrap_async(func: Any) -> Any:
     """Wraps sync functions and makes them async
 
     Args:

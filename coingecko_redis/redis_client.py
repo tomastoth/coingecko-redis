@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Dict, Optional
 
 import redis.asyncio as redis
 
@@ -25,13 +25,12 @@ class PriceCache(ABC):
         pass
 
     @abstractmethod
-    async def update_price(self, symbol: str, new_price: float):
+    async def update_prices(self, new_prices: Dict[str, float]):
         """
         Enables updating of price in cache
 
         Args:
-            symbol (str): symbol of crypto
-            new_price (float): new price to use for symbol in cache
+            new_prices (Dict[str,float]): dict of new prices
         """
         pass
 
@@ -53,5 +52,5 @@ class RedisClient(PriceCache):
             return float(found_price)
         return None
 
-    async def update_price(self, symbol: str, new_price: float):
-        return await self._redis.set(symbol, new_price)
+    async def update_prices(self, new_prices: Dict[str, float]):
+        return await self._redis.mset(new_prices)
