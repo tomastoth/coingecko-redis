@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Optional
 
-import redis.asyncio as redis
+from redis import asyncio as redis
 
 from coingecko_redis.config import config
 
 
-class PriceCache(ABC):
+class PriceCacheReader(ABC):
     """
     Interface for price caching
     """
@@ -24,8 +24,10 @@ class PriceCache(ABC):
         """
         pass
 
+
+class PriceCacheWriter(ABC):
     @abstractmethod
-    async def update_prices(self, new_prices: Dict[str, float]):
+    async def update_prices(self, new_prices: Dict[str, float]) -> None:
         """
         Enables updating of price in cache
 
@@ -35,7 +37,7 @@ class PriceCache(ABC):
         pass
 
 
-class RedisClient(PriceCache):
+class RedisClient(PriceCacheWriter, PriceCacheReader):
     """
     Redis price cache client, enables getting the price from cache and updating it
     """
@@ -52,5 +54,5 @@ class RedisClient(PriceCache):
             return float(found_price)
         return None
 
-    async def update_prices(self, new_prices: Dict[str, float]):
+    async def update_prices(self, new_prices: Dict[str, float]) -> None:
         return await self._redis.mset(new_prices)
